@@ -50,7 +50,7 @@ def granger_run(n, max_lag):
     return compute_time, p_value
 
 
-def plotter(main_data):
+def plotter(main_data, n_max, lag_max):
     '''
     Input:
     pandas DataFrame to be plotted
@@ -133,6 +133,9 @@ def plotter(main_data):
     # Adjust spacing between subplots
     plt.tight_layout()
 
+    # Save figure to file
+    plt.savefig(f'figure for {n_max} time data and max lag of {lag_max}.png')
+
     # Show the plots
     plt.show()
 
@@ -177,7 +180,11 @@ def main(n_max, lag_max):
                               'Compute time': compute_times,
                               'p-value': p_values})
 
-    plotter(main_data)
+    # Export to csv, to compare with R
+    main_data.to_csv(f'python generated data with {n_max} time data and max lag of {lag_max}.csv',
+                     index=False)
+
+    plotter(main_data, n_max, lag_max)
 
 
 if __name__ == "__main__":
@@ -189,8 +196,7 @@ if __name__ == "__main__":
 
     if len(args) > 0:
         n_max = int(args[0])
-        print(n_max)
         lag_max = int(args[1])
-        print(lag_max)
 
+    print(f'Running granger causality with {n_max} time data and max lag of {lag_max}')
     main(n_max, lag_max)
